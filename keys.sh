@@ -1,5 +1,0 @@
-export AWS_ACCESS_KEY_ID='AKIAYZTCOI4LPHSWFDFJ'
-export AWS_SECRET_ACCESS_KEY='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'
-export AWS_REGION='us-east-1'
-
-
