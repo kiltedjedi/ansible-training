@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  gather_facts: yes
+  tasks:
+    - name: Change instance state by tag
+      local_action: ec2
+      args:
+        state: running
+        instance_tags: 
+          Course: Ansible 

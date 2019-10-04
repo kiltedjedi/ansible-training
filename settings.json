@@ -1,0 +1,5 @@
+{
+    "git.autofetch": true,
+    "editor.largeFileOptimizations": false,
+    "git.confirmSync": false
+}
