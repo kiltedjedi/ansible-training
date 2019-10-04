@@ -1,0 +1,48 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars_files:
+    - keys.yml
+  tasks:
+    - name: Provision instance
+      ec2:
+        aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+        aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+        ec2_region: "{{ AWS_REGION }}"
+        instance_type: t2.micro
+        keypair: ansible-keypair
+        image: ami-06a4e829b8bbad61e
+        assign_public_ip: yes
+        vpc_subnet_id: subnet-0f99dba7664aaba38
+        group: launch-wizard-1
+        wait: true
+        exact_count: 1
+        count_tag: 
+          Name: Course-VM
+        instance_tags:
+          Name: Course-VM
+          Course: Ansible
+          OS: Windows
+      register: ec2
+    - debug:
+        var: ec2
+     
+    - name: add host to inventory
+      add_host:
+        hostname: '{{ item.public_ip }}'
+        groupname: demogroup
+        ansible_ssh_common_args: "-o StrictHostNameChecking=no"
+        ansible_ssh_private_key_file: /home/ansible/.ssh/jw-ansible-keypair.pem
+      loop: '{{ ec2.instances }}'
+
+- hosts: demogroup
+  gather_facts: no
+  remote_user: ec2-user
+  tasks:
+    - name: Wait for SSH
+      wait_for_connection:
+        delay: 5
+        timeout: 90
+    - name: check host status
+      win_ping:
+
